@@ -1,17 +1,33 @@
 import { useEffect, useState } from "react";
 import { ExecutionResult } from "graphql";
 import type { NextPage } from "next";
-import { SubgraphsDocument, SubgraphsQuery, execute } from "~~/.graphclient";
+import { SubgraphsDocument, SubgraphsQuery } from "~~/.graphclient";
 import { MetaHeader } from "~~/components/MetaHeader";
 
 const Home: NextPage = () => {
   const [result, setResult] = useState<ExecutionResult<SubgraphsQuery>>();
 
   useEffect(() => {
-    execute(SubgraphsDocument, {}).then(result => {
-      setResult(result);
-      console.log(result);
-    });
+    fetch("/api/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `query Subgraphs {
+          crossSubgraphs(first: 10, orderBy: currentSignalledTokens, orderDirection: desc, where: { entityVersion: 2 }) {
+            id
+            deployedChain
+            metadata {
+              displayName
+            }
+          }
+        }
+        `,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => setResult(data));
   }, []);
 
   return (

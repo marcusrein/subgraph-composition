@@ -23,8 +23,8 @@ import { path as pathModule } from '@graphql-mesh/cross-helpers';
 import { ImportFn } from '@graphql-mesh/types';
 import type { MainnetTypes } from './sources/mainnet/types';
 import type { ArbitrumTypes } from './sources/arbitrum/types';
-import * as importedModule$0 from "./sources/arbitrum/introspectionSchema";
-import * as importedModule$1 from "./sources/mainnet/introspectionSchema";
+import * as importedModule$0 from "./sources/mainnet/introspectionSchema";
+import * as importedModule$1 from "./sources/arbitrum/introspectionSchema";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -126,6 +126,8 @@ export type Query = {
   accountSearch: Array<GraphAccount>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
+  indexersRecalculateQueue?: Maybe<IndexersRecalculateQueue>;
+  indexersRecalculateQueues: Array<IndexersRecalculateQueue>;
   crossSubgraphs: Array<Subgraph>;
 };
 
@@ -831,6 +833,24 @@ export type Query_metaArgs = {
 };
 
 
+export type QueryindexersRecalculateQueueArgs = {
+  id: Scalars['ID'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryindexersRecalculateQueuesArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<IndexersRecalculateQueue_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<IndexersRecalculateQueue_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
 export type QuerycrossSubgraphsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   first?: InputMaybe<Scalars['Int']>;
@@ -915,6 +935,8 @@ export type Subscription = {
   transactions: Array<Transaction>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
+  indexersRecalculateQueue?: Maybe<IndexersRecalculateQueue>;
+  indexersRecalculateQueues: Array<IndexersRecalculateQueue>;
 };
 
 
@@ -1576,6 +1598,24 @@ export type SubscriptiontransactionsArgs = {
 
 export type Subscription_metaArgs = {
   block?: InputMaybe<Block_height>;
+};
+
+
+export type SubscriptionindexersRecalculateQueueArgs = {
+  id: Scalars['ID'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionindexersRecalculateQueuesArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<IndexersRecalculateQueue_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<IndexersRecalculateQueue_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
 };
 
 export type AccountMetadata = {
@@ -11412,6 +11452,43 @@ export type _SubgraphErrorPolicy_ =
   /** If the subgraph has indexing errors, data will be omitted. The default. */
   | 'deny';
 
+/**
+ * ZONE OF DARK MAGIC DONT USE IT OR U DIE
+ *
+ */
+export type IndexersRecalculateQueue = {
+  /** ID is 0 - infinity */
+  id: Scalars['ID'];
+  indexer: Scalars['ID'];
+};
+
+export type IndexersRecalculateQueue_filter = {
+  id?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  indexer?: InputMaybe<Scalars['ID']>;
+  indexer_not?: InputMaybe<Scalars['ID']>;
+  indexer_gt?: InputMaybe<Scalars['ID']>;
+  indexer_lt?: InputMaybe<Scalars['ID']>;
+  indexer_gte?: InputMaybe<Scalars['ID']>;
+  indexer_lte?: InputMaybe<Scalars['ID']>;
+  indexer_in?: InputMaybe<Array<Scalars['ID']>>;
+  indexer_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<IndexersRecalculateQueue_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<IndexersRecalculateQueue_filter>>>;
+};
+
+export type IndexersRecalculateQueue_orderBy =
+  | 'id'
+  | 'indexer';
+
 export type CHAIN =
   | 'ARBITRUM'
   | 'MAINNET';
@@ -11639,6 +11716,9 @@ export type ResolversTypes = ResolversObject<{
   _Block_: ResolverTypeWrapper<_Block_>;
   _Meta_: ResolverTypeWrapper<_Meta_>;
   _SubgraphErrorPolicy_: _SubgraphErrorPolicy_;
+  IndexersRecalculateQueue: ResolverTypeWrapper<IndexersRecalculateQueue>;
+  IndexersRecalculateQueue_filter: IndexersRecalculateQueue_filter;
+  IndexersRecalculateQueue_orderBy: IndexersRecalculateQueue_orderBy;
   CHAIN: CHAIN;
 }>;
 
@@ -11735,6 +11815,8 @@ export type ResolversParentTypes = ResolversObject<{
   Transaction_filter: Transaction_filter;
   _Block_: _Block_;
   _Meta_: _Meta_;
+  IndexersRecalculateQueue: IndexersRecalculateQueue;
+  IndexersRecalculateQueue_filter: IndexersRecalculateQueue_filter;
 }>;
 
 export type entityDirectiveArgs = { };
@@ -11831,6 +11913,8 @@ export type QueryResolvers<ContextType = MeshContext, ParentType extends Resolve
   indexerSearch?: Resolver<Array<ResolversTypes['Indexer']>, ParentType, ContextType, RequireFields<QueryindexerSearchArgs, 'text' | 'first' | 'skip' | 'subgraphError'>>;
   accountSearch?: Resolver<Array<ResolversTypes['GraphAccount']>, ParentType, ContextType, RequireFields<QueryaccountSearchArgs, 'text' | 'first' | 'skip' | 'subgraphError'>>;
   _meta?: Resolver<Maybe<ResolversTypes['_Meta_']>, ParentType, ContextType, Partial<Query_metaArgs>>;
+  indexersRecalculateQueue?: Resolver<Maybe<ResolversTypes['IndexersRecalculateQueue']>, ParentType, ContextType, RequireFields<QueryindexersRecalculateQueueArgs, 'id' | 'subgraphError'>>;
+  indexersRecalculateQueues?: Resolver<Array<ResolversTypes['IndexersRecalculateQueue']>, ParentType, ContextType, RequireFields<QueryindexersRecalculateQueuesArgs, 'skip' | 'first' | 'subgraphError'>>;
   crossSubgraphs?: Resolver<Array<ResolversTypes['Subgraph']>, ParentType, ContextType, RequireFields<QuerycrossSubgraphsArgs, 'skip'>>;
 }>;
 
@@ -11908,6 +11992,8 @@ export type SubscriptionResolvers<ContextType = MeshContext, ParentType extends 
   transaction?: SubscriptionResolver<Maybe<ResolversTypes['Transaction']>, "transaction", ParentType, ContextType, RequireFields<SubscriptiontransactionArgs, 'id' | 'subgraphError'>>;
   transactions?: SubscriptionResolver<Array<ResolversTypes['Transaction']>, "transactions", ParentType, ContextType, RequireFields<SubscriptiontransactionsArgs, 'skip' | 'first' | 'subgraphError'>>;
   _meta?: SubscriptionResolver<Maybe<ResolversTypes['_Meta_']>, "_meta", ParentType, ContextType, Partial<Subscription_metaArgs>>;
+  indexersRecalculateQueue?: SubscriptionResolver<Maybe<ResolversTypes['IndexersRecalculateQueue']>, "indexersRecalculateQueue", ParentType, ContextType, RequireFields<SubscriptionindexersRecalculateQueueArgs, 'id' | 'subgraphError'>>;
+  indexersRecalculateQueues?: SubscriptionResolver<Array<ResolversTypes['IndexersRecalculateQueue']>, "indexersRecalculateQueues", ParentType, ContextType, RequireFields<SubscriptionindexersRecalculateQueuesArgs, 'skip' | 'first' | 'subgraphError'>>;
 }>;
 
 export type AccountMetadataResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['AccountMetadata'] = ResolversParentTypes['AccountMetadata']> = ResolversObject<{
@@ -12701,6 +12787,12 @@ export type _Meta_Resolvers<ContextType = MeshContext, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type IndexersRecalculateQueueResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['IndexersRecalculateQueue'] = ResolversParentTypes['IndexersRecalculateQueue']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  indexer?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type Resolvers<ContextType = MeshContext> = ResolversObject<{
   Query?: QueryResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
@@ -12748,6 +12840,7 @@ export type Resolvers<ContextType = MeshContext> = ResolversObject<{
   Transaction?: TransactionResolvers<ContextType>;
   _Block_?: _Block_Resolvers<ContextType>;
   _Meta_?: _Meta_Resolvers<ContextType>;
+  IndexersRecalculateQueue?: IndexersRecalculateQueueResolvers<ContextType>;
 }>;
 
 export type DirectiveResolvers<ContextType = MeshContext> = ResolversObject<{
@@ -12756,7 +12849,7 @@ export type DirectiveResolvers<ContextType = MeshContext> = ResolversObject<{
   derivedFrom?: derivedFromDirectiveResolver<any, any, ContextType>;
 }>;
 
-export type MeshContext = ArbitrumTypes.Context & MainnetTypes.Context & BaseMeshContext;
+export type MeshContext = MainnetTypes.Context & ArbitrumTypes.Context & BaseMeshContext;
 
 
 import { fileURLToPath } from '@graphql-mesh/utils';
@@ -12765,10 +12858,10 @@ const baseDir = pathModule.join(pathModule.dirname(fileURLToPath(import.meta.url
 const importFn: ImportFn = <T>(moduleId: string) => {
   const relativeModuleId = (pathModule.isAbsolute(moduleId) ? pathModule.relative(baseDir, moduleId) : moduleId).split('\\').join('/').replace(baseDir + '/', '');
   switch(relativeModuleId) {
-    case ".graphclient/sources/arbitrum/introspectionSchema":
+    case ".graphclient/sources/mainnet/introspectionSchema":
       return Promise.resolve(importedModule$0) as T;
     
-    case ".graphclient/sources/mainnet/introspectionSchema":
+    case ".graphclient/sources/arbitrum/introspectionSchema":
       return Promise.resolve(importedModule$1) as T;
     
     default:
@@ -12805,7 +12898,7 @@ const mainnetTransforms = [];
 const arbitrumTransforms = [];
 const mainnetHandler = new GraphqlHandler({
               name: "mainnet",
-              config: {"endpoint":"https://gateway-arbitrum.network.thegraph.com/api/dc9b1200d80a1c064c90462b9c04f264/subgraphs/id/AwyZBdna4vTAHiqBWsrQ5ErFRMi6HCgGEkQMgNBseWTL"},
+              config: {"endpoint":"https://gateway-arbitrum.network.thegraph.com/api/subgraphs/id/AwyZBdna4vTAHiqBWsrQ5ErFRMi6HCgGEkQMgNBseWTL","operationHeaders":{"Authorization":"Bearer {env.API_KEY}"},"schemaHeaders":{"Authorization":"Bearer dc9b1200d80a1c064c90462b9c04f264"}},
               baseDir,
               cache,
               pubsub,
@@ -12815,7 +12908,7 @@ const mainnetHandler = new GraphqlHandler({
             });
 const arbitrumHandler = new GraphqlHandler({
               name: "arbitrum",
-              config: {"endpoint":"https://gateway-arbitrum.network.thegraph.com/api/dc9b1200d80a1c064c90462b9c04f264/subgraphs/id/DjUVVVSuKcCCTZSVzVXLioSd7AdqwGEyBrY4Ru5tuqzX"},
+              config: {"endpoint":"https://gateway-arbitrum.network.thegraph.com/api/subgraphs/id/DjUVVVSuKcCCTZSVzVXLioSd7AdqwGEyBrY4Ru5tuqzX","operationHeaders":{"Authorization":"Bearer {env.API_KEY}"},"schemaHeaders":{"Authorization":"Bearer dc9b1200d80a1c064c90462b9c04f264"}},
               baseDir,
               cache,
               pubsub,

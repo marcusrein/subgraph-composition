@@ -2,11 +2,19 @@ sources:
   - name: mainnet
     handler:
       graphql:
-        endpoint: https://gateway-arbitrum.network.thegraph.com/api/dc9b1200d80a1c064c90462b9c04f264/subgraphs/id/AwyZBdna4vTAHiqBWsrQ5ErFRMi6HCgGEkQMgNBseWTL
+        endpoint: https://gateway-arbitrum.network.thegraph.com/api/subgraphs/id/AwyZBdna4vTAHiqBWsrQ5ErFRMi6HCgGEkQMgNBseWTL
+        operationHeaders:
+          Authorization: Bearer {env.API_KEY}
+        schemaHeaders:
+          Authorization: Bearer ${API_KEY}
   - name: arbitrum
     handler:
       graphql:
-        endpoint: https://gateway-arbitrum.network.thegraph.com/api/dc9b1200d80a1c064c90462b9c04f264/subgraphs/id/DjUVVVSuKcCCTZSVzVXLioSd7AdqwGEyBrY4Ru5tuqzX
+        endpoint: https://gateway-arbitrum.network.thegraph.com/api/subgraphs/id/DjUVVVSuKcCCTZSVzVXLioSd7AdqwGEyBrY4Ru5tuqzX
+        operationHeaders:
+          Authorization: Bearer {env.API_KEY}
+        schemaHeaders:
+          Authorization: Bearer ${API_KEY}
 
 documents:
   - "./queries/**/*.graphql"
